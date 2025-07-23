@@ -1,0 +1,41 @@
+# Caesar Cipher Implementation
+
+def encrypt(text, shift):
+    result = ""
+    for char in text:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            result += chr((ord(char) - base + shift) % 26 + base)
+        else:
+            result += char  # Keep non-alphabetic characters unchanged
+    return result
+
+def decrypt(text, shift):
+    return encrypt(text, -shift)
+
+# Main Program
+def caesar_cipher():
+    print("=== Caesar Cipher ===")
+    choice = input("Type 'E' to Encrypt or 'D' to Decrypt: ").upper()
+
+    if choice not in ['E', 'D']:
+        print("Invalid choice.")
+        return
+
+    message = input("Enter your message: ")
+    try:
+        shift = int(input("Enter shift value (0-25): "))
+    except ValueError:
+        print("Shift must be an integer.")
+        return
+
+    if choice == 'E':
+        result = encrypt(message, shift)
+        print(f"\nEncrypted message: {result}")
+    else:
+        result = decrypt(message, shift)
+        print(f"\nDecrypted message: {result}")
+
+# Run the program
+if __name__ == "__main__":
+    caesar_cipher()
