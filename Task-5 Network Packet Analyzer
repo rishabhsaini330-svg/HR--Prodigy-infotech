@@ -1,0 +1,33 @@
+from scapy.all import sniff, IP, TCP, UDP
+
+# Function to process captured packets
+def packet_analyzer(packet):
+    if IP in packet:
+        ip_layer = packet[IP]
+        protocol = ''
+        src_port = dst_port = 'N/A'
+
+        if TCP in packet:
+            protocol = 'TCP'
+            src_port = packet[TCP].sport
+            dst_port = packet[TCP].dport
+        elif UDP in packet:
+            protocol = 'UDP'
+            src_port = packet[UDP].sport
+            dst_port = packet[UDP].dport
+        else:
+            protocol = ip_layer.proto
+
+        print(f"""
+        [Packet Captured]
+        Source IP: {ip_layer.src}
+        Destination IP: {ip_layer.dst}
+        Protocol: {protocol}
+        Source Port: {src_port}
+        Destination Port: {dst_port}
+        Payload: {bytes(packet.payload)}
+        """)
+
+# Start sniffing (use count=5 for capturing 5 packets)
+print("Starting packet sniffer... Press Ctrl+C to stop.")
+sniff(filter="ip", prn=packet_analyzer, count=5)
